@@ -18,4 +18,10 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\tretton37.WebScraper.BAL\tretton37.WebScraper.BAL.csproj" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="appSettings.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
 </Project>

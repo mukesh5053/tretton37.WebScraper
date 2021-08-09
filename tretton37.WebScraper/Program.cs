@@ -26,7 +26,7 @@ namespace tretton37.WebScraper
             {
                 Console.WriteLine("Start initializing engine configuration.");
                 host = Configure();
-                var svc = ActivatorUtilities.CreateInstance<IEngine>(host.Services);
+                var svc = ActivatorUtilities.CreateInstance<Engine>(host.Services);
                 Console.WriteLine("Start engine to download website data");
                 await svc.StartAsync();
             }
@@ -35,7 +35,7 @@ namespace tretton37.WebScraper
                 Console.WriteLine($"Error : {ex.ToString()}");
                 Console.WriteLine("Something went wrong please contact support.");
             }
-          
+
         }
         #endregion
 
@@ -52,11 +52,11 @@ namespace tretton37.WebScraper
 
         private static IHost Configure()
         {
-            IHost host =null ;
+            IHost host = null;
             IConfigurationBuilder configBuilder = null;
             try
             {
-                
+
                 configBuilder = new ConfigurationBuilder();
                 BuildConfig(configBuilder);
 
@@ -73,6 +73,9 @@ namespace tretton37.WebScraper
                     .ConfigureServices((context, services) =>
                     {
                         services.AddScoped<IEngine, Engine>();
+                        services.AddScoped<IAppConfig, AppConfig>();
+                        services.AddScoped<IAppConfig, AppConfig>();
+
                     })
                     .UseSerilog()
                     .Build();
@@ -85,7 +88,7 @@ namespace tretton37.WebScraper
                 Console.WriteLine("Failed initializing engine configuration...");
                 throw;
             }
-                return host;
+            return host;
         }
         #endregion
 
