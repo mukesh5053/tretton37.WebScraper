@@ -31,7 +31,7 @@ namespace tretton37.WebScraper.BAL.Services
         /// Default functionality for the DownloadResources method. 
         /// </summary>
         /// <param name="ResourceUrls"></param>
-        public void DownloadResources(List<string> ResourceUrls)
+        public virtual void DownloadResources(List<string> ResourceUrls)
         {
 
             lock (_lock)
@@ -42,7 +42,7 @@ namespace tretton37.WebScraper.BAL.Services
 
                         DownloadResourceFile(currentResourceUrl, _websiteUrl);
                }
-               catch (Exception e)
+               catch (Exception)
                {
                    _log.LogError("Base.DownloadResources() : Error downloading resource: {0} \n", currentResourceUrl);
                }

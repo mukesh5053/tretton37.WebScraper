@@ -93,7 +93,7 @@ namespace tretton37.WebScraper.BAL.Services
                     });
                 }
             }
-            catch (System.ArgumentNullException e)
+            catch (System.ArgumentNullException)
             {
                 _log.LogError("ImageParser.Parse() : Error parsing images.");
                 throw;

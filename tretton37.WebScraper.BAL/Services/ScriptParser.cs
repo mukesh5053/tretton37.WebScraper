@@ -27,6 +27,10 @@ namespace tretton37.WebScraper.BAL.Services
             _log = log;
         }
 
+        /// <summary>
+        /// Parse and Downloads the script.
+        /// </summary>
+        /// <param name="htmlContent"></param>
         public void ParseAndDowloadScriptFiles(string htmlContent)
         {
 
@@ -55,7 +59,11 @@ namespace tretton37.WebScraper.BAL.Services
             
         }
 
-
+        /// <summary>
+        /// Parse the html content and find for script
+        /// </summary>
+        /// <param name="htmlContent"></param>
+        /// <param name="websiteUrl"></param>
         public void Parse(string htmlContent, string websiteUrl)
         {
             HtmlNodeCollection scriptfiles = null;
@@ -85,7 +93,7 @@ namespace tretton37.WebScraper.BAL.Services
                     });
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 _log.LogError("ScriptParser.Parse() : Error parsing script files to local disk.");
                 throw;

@@ -85,6 +85,11 @@ namespace tretton37.WebScraper.BAL.Services
            
         }
 
+        /// <summary>
+        /// Parse the html content and finds for style content.
+        /// </summary>
+        /// <param name="htmlContent"></param>
+        /// <param name="websiteUrl"></param>
         public void Parse(string htmlContent, string websiteUrl)
         {
             HtmlNodeCollection styleFiles = null;
@@ -145,7 +150,7 @@ namespace tretton37.WebScraper.BAL.Services
                  }
                
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 _log.LogError("StyleParser.parse() : Error parsing style files.");
                 throw;

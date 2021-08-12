@@ -9,7 +9,7 @@ using tretton37.WebScraper.BAL.Interfaces;
 
 namespace tretton37.WebScraper.BAL.Services
 {
-    class AnchorParser : ParserBase, IAnchorParser
+   public class AnchorParser : ParserBase, IAnchorParser
     {
         private const string LINK_XPATH = "//a/@href";
         private List<string> _internalUrls = null;
@@ -27,6 +27,10 @@ namespace tretton37.WebScraper.BAL.Services
             _log = log;
         }
 
+        /// <summary>
+        /// Parse html content and add to the list
+        /// </summary>
+        /// <param name="htmlContent"></param>
         public void Parse(string htmlContent)
         {
 
@@ -77,13 +81,18 @@ namespace tretton37.WebScraper.BAL.Services
                     });
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 _log.LogError("AnchorParser.Parse() : Error parsing Anchor/links.");
                 throw;
             }
         }
 
+        /// <summary>
+        /// Returns true if the url is external else retrun false
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
         private bool IsExternalUrl(string url)
         {
             try

@@ -2,7 +2,7 @@
 
 namespace tretton37.WebScraper.BAL.Interfaces
 {
-    interface IAnchorParser
+  public  interface IAnchorParser
     {
         List<string> ResourceLinks { get; set; }
 

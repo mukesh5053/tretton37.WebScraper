@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace tretton37.WebScraper.BAL
 {
-   static  class Helper
+  public static  class Helper
     {
         public static List<string> globalDownloadedList = new List<string>(); //Use this to track the already downloaded resources. 
 

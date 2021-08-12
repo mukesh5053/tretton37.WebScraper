@@ -13,15 +13,17 @@ namespace tretton37.WebScraper.BAL.Services
     {
 
         private readonly ILogger<AppConfig> _logger;
-        private readonly IConfiguration _configuration;
 
-        public AppConfig(ILogger<AppConfig> logger, IConfiguration configuration)
+        public AppConfig(ILogger<AppConfig> logger)
         {
             _logger = logger;
-            _configuration = configuration;
         }
 
 
+        /// <summary>
+        /// Read and returns scraper setting.
+        /// </summary>
+        /// <returns></returns>
         public WebScraperSetting ReadSettings()
         {
             WebScraperSetting settings = null;

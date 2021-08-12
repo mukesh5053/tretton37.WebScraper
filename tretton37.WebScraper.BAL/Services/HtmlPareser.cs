@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.IO;
+using System.Threading.Tasks;
 using tretton37.WebScraper.BAL.Interfaces;
 
 namespace tretton37.WebScraper.BAL.Services
@@ -14,8 +15,13 @@ namespace tretton37.WebScraper.BAL.Services
             _log = log;
         }
 
-
-        public void DownloadHtmlPage(string path, string response)
+        /// <summary>
+        /// Download Html Page and store to the disk
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="response"></param>
+        /// <returns></returns>
+        public async Task DownloadHtmlPageAsync(string path, string response)
         {
             FileInfo fi = null;
             try
@@ -33,7 +39,7 @@ namespace tretton37.WebScraper.BAL.Services
                     File.Delete(path);
                 }
 
-                File.WriteAllText(path, response);
+               await File.WriteAllTextAsync(path, response);
             }
             catch (System.Exception)
             {

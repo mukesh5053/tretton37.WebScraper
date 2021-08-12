@@ -50,6 +50,10 @@ namespace tretton37.WebScraper
                 .AddJsonFile("appSettings.json", optional: false, reloadOnChange: true);
         }
 
+        /// <summary>
+        /// Config Initialization
+        /// </summary>
+        /// <returns></returns>
         private static IHost Configure()
         {
             IHost host = null;

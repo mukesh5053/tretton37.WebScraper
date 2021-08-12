@@ -49,23 +49,29 @@ namespace tretton37.WebScraper.BAL.Services
         #endregion
 
 
+        /// <summary>
+        /// Start Engine and downlaods data
+        /// </summary>
+        /// <returns></returns>
         public async Task StartAsync()
         {
             try
             {
-                _log.LogInformation($"Start : Engine Started...");
+                _log.LogInformation($"StartAsync : Engine Started...");
                 foreach (var url in _appSettings.WebUrls)
                 {
-                    ParsePage(url);
+                  await ParsePageAsync(url);
                 }
 
-
+                _log.LogInformation($"StartAsync : Downlaoding Completed successfully...");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
+                _log.LogInformation($"StartAsync : Error occured.");
                 throw;
             }
         }
+
         /// <summary>
         /// This is where most of the action occurs. 
         /// It gets the html content of the current page and starts searching for all the internal links. While ignoring external ones. 
@@ -73,7 +79,7 @@ namespace tretton37.WebScraper.BAL.Services
         /// Finally, it starts crawling the found links and goes down the ninja hole. 
         /// </summary>
         /// <param name="urlPath"></param>
-        private void ParsePage(string urlPath)
+        private async Task ParsePageAsync(string urlPath)
         {
             if (!PageHasBeenCrawled(urlPath)) //Check if the page has already been parsed. 
             {
@@ -83,7 +89,7 @@ namespace tretton37.WebScraper.BAL.Services
                 _log.LogInformation("Begin parsing page {0} \n", urlPath);
 
                 //This should be wrapped in a try catch to catch any exceptions that occur within the GetWebString method. 
-                string urlContent = GetWebString(urlPath); //Get the html contents of the current page/url.
+                var urlContent = await GetWebStringAsync(urlPath); //Get the html contents of the current page/url.
 
 
                 //Note: I got rid of the WebPage object. I thought it unnecessary due to everything I need like the "urlContent" and "urlPath" being centralized. 
@@ -108,7 +114,9 @@ namespace tretton37.WebScraper.BAL.Services
                             Parallel.ForEach(diff, (currentInternalLink) =>
                             {
                                 if (currentInternalLink != null && currentInternalLink != string.Empty)
-                                    ParsePage(currentInternalLink);
+                                { 
+                                   ParsePageAsync(currentInternalLink);
+                                }
                             });
                         }
 
@@ -122,7 +130,7 @@ namespace tretton37.WebScraper.BAL.Services
 
         /// <summary>
         /// Concurrently run the three resource parse and download functions.
-        /// I separated the three "parse" code snippets into different methods to be able to run the three steps concurrently.
+        /// separated the three "parse" code snippets into different methods to be able to run the three steps concurrently.
         /// </summary>
         /// <param name="wPage"></param>
         private void ParseResourceFilesAndLinks(string htmlContent, string websiteUrl)
@@ -143,7 +151,7 @@ namespace tretton37.WebScraper.BAL.Services
         /// </summary>
         /// <param name="Url"></param>
         /// <returns></returns>
-        private string GetWebString(string Url)
+        private async Task<string> GetWebStringAsync(string Url)
         {
 
             Thread.Sleep(500);// Not sure why I had this. 
@@ -170,26 +178,22 @@ namespace tretton37.WebScraper.BAL.Services
                 {
                     _log.LogInformation($"Downloading htmlcontent for {currentPage}");
                     HttpWebRequest wrWebRequest = WebRequest.Create(Url) as HttpWebRequest;
-                    HttpWebResponse wrWebResponse = (HttpWebResponse)wrWebRequest.GetResponse();
+                    var wrWebResponseAsync = await wrWebRequest.GetResponseAsync();
                     StreamReader srResponse;
 
-                    using (srResponse = new StreamReader(wrWebResponse.GetResponseStream()))
+                    using (srResponse = new StreamReader(wrWebResponseAsync.GetResponseStream()))
                     {
-                        //Get the contents of the page as string. I thought about using the async methods. But this code will most likley be running on a separate thread anyway. 
-                        //I didn't think it would be wise to use async/await on something that wasn't holding up some sort of UI thread. 
-                        strResponse = srResponse.ReadToEnd();
-                        //Save the page as a html file on disk on a new thread.
-                        //I did this because the main work wasn't already done. 
-                        //I figured I could let any filesystem interaction run on another thread while the rest of the code continues on. 
-                      
+                        
+                        strResponse = await srResponse.ReadToEndAsync();
 
                         new Thread(() =>
-                             new HtmlPareser(htmlParserLog).DownloadHtmlPage(_appSettings.STORAGE_LOCATION + pageHtmlName, strResponse)
+                             new HtmlPareser(htmlParserLog)
+                             .DownloadHtmlPageAsync(_appSettings.STORAGE_LOCATION + pageHtmlName, strResponse).ConfigureAwait(false)
 
                         ).Start();
                     }
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     _log.LogError($"GetWebString() : An error occured while trying to get data from {Url}.");
                     throw;

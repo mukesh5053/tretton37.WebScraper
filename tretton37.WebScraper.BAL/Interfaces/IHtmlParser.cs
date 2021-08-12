@@ -7,6 +7,6 @@ namespace tretton37.WebScraper.BAL.Interfaces
 
    public interface IHtmlParser
     {
-       void DownloadHtmlPage(string path, string response);
+         Task DownloadHtmlPageAsync(string path, string response);
     }
 }
